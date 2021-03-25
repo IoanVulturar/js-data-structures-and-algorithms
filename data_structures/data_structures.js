@@ -3,6 +3,7 @@
     - Stack
     - ArrayStack
     - Queue
+    - StackQueue
 */
 
 
@@ -148,3 +149,41 @@ q.enqueue('Mark');
 q.peek();
 q.dequeue();
 */
+
+
+/*
+  Impement a Queue data structure using two stacks
+*/
+class StackQueue {
+  constructor() {
+    this.stack1 = new Stack();
+    this.stack2 = new Stack();
+  }
+
+  add(value) {
+    this.stack1.push(value);
+  }
+
+  remove() {
+    while (this.stack1.peek()) {
+      this.stack2.push(this.stack1.pop());
+    }
+    const tempNode = this.stack2.pop();
+    while (this.stack2.peek()) {
+      this.stack1.push(this.stack2.pop());
+    }
+    return tempNode;
+  }
+
+  peek() {
+    while (this.stack1.peek()) {
+      this.stack2.push(this.stack1.pop());
+    }
+    const tempNode = this.stack2.peek();
+    while (this.stack2.peek()) {
+      this.stack1.push(this.stack2.pop());
+    }
+    return tempNode;
+  }
+
+}
