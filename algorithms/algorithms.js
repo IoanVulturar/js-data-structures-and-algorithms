@@ -11,6 +11,11 @@
     9) Vowels
    10) Printing Steps
    11) Printing Pyramid
+   12) Rock-Paper-Scissors
+   13) Spiral Matrix
+   14) Fibonacci
+   15) String Reduction
+   16) Sorting Algorithms
 */
 
 
@@ -255,7 +260,7 @@ function vowels2(str) {
 
 /* ------------------------------- 10
   Write a function that accepts a positive number N.
-  The function should print a step shape with N levels using the # character. The step must have spaces(or some chracter) on the right hand side!
+  The function should print a step shape with N levels(rows) using the # character. The step must have spaces(or some chracter) on the right hand side!
 */
 function printSteps(n) {
   const stepChar = '#';
@@ -344,4 +349,232 @@ function printPyramidRecursive(n, row = 0, line = '') {
   }
 
   printPyramidRecursive(n, row, line + char);
+}
+
+
+/* ------------------------------- 12
+  Rock-Paper-Scissors game
+  Rules: rock beats scissors, scissors beats paper, paper beats rock
+*/
+
+function rockPaperScissors() {
+  const options = ['rock', 'paper', 'scissors'];
+  const selection = {
+    rock: 'paper',
+    paper: 'scissors',
+    scissors: 'rock'
+  }
+
+  const player1 = options[Math.floor(Math.random() * options.length)];
+  const player2 = options[Math.floor(Math.random() * options.length)];
+
+  console.log('Player1: ' + player1);
+  console.log('Player2: ' + player2);
+
+  if (player1 === player2) {
+    console.log('DRAW');
+  } else if (selection[player1] === player2) {
+    console.log('Player2 WIN!!!');
+  } else {
+    console.log('Player1 WIN!!!');
+  }
+}
+
+
+/* ------------------------------- 13
+  Write a function that accepts an integer N and returns a NxN spiral matrix
+  1 2 3
+  8 9 4
+  7 6 5
+*/
+function spiralMatrix(n) {
+  let startRow = 0, endRow = n - 1, startColumn = 0, endColumn = n - 1;
+  let spiral = [];
+  let counter = 1;
+
+  for (let i = 0; i < n; i++) {
+    spiral.push([]);
+  }
+
+  while (startRow <= endRow && startColumn <= endColumn) {
+
+    for (let j = startColumn; j <= endColumn; j++) {
+      spiral[startRow][j] = counter;
+      counter++;
+    }
+    startRow++;
+
+    for (let i = startRow; i <= endRow; i++) {
+      spiral[i][endColumn] = counter;
+      counter++;
+    }
+    endColumn--;
+
+    for (let j = endColumn; j >= startColumn; j--) {
+      spiral[endRow][j] = counter;
+      counter++;
+    }
+    endRow--;
+
+    for (let i = endRow; i >= startRow; i--) {
+      spiral[i][startColumn] = counter;
+      counter++;
+    }
+    startColumn++;
+  }
+
+  return spiral;
+}
+
+
+/* ------------------------------- 14
+  Print out the n-th entry in the fibonacci series.
+  Each number is the sum of the preceeding two.
+  0,1,1,2,3,5,8,13
+  fibonacci(7) -> 13
+*/
+
+function fibonacci(n) {
+  const result = [0, 1];
+
+  for (let i = 2; i <= n; i++) {
+    result.push(result[i - 1] + result[i - 2]);
+  }
+
+  return result[n];
+}
+
+function fibonacciRecursive(n) {
+  if (n < 2) {
+    return n;
+  }
+  return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2)
+}
+
+function memoize(func) {
+  const cache = {};
+  return function (...args) {
+    if (cache[args]) {
+      return cache[args];
+    }
+
+    const result = func.apply(this, args);
+    cache[args] = result;
+
+    return result;
+  };
+}
+
+const fibonacciRecursiveMemoization = memoize(fibonacciRecursive);
+
+
+/* ------------------------------- 15
+  Given a string consisting of the letters a, b and c, we can take any two adjacent distinct characters and replace them with the third character.
+  Find the shortest string obtainable through applying this operation repeatedly.
+
+  e.g. stringReduction('abcabc')
+  abcabc
+  ccabc - 1 reduction(s)
+  cbbc - 2 reduction(s)
+  abc - 3 reduction(s)
+  cc - 4 reduction(s)
+  abcabc -> 4 reduction(s) to -> cc
+*/
+
+function stringReduction(str) {
+  console.log(str);
+  const tempStr = str;
+  let counter = 0;
+  let isEnd = false;
+
+  while (!isEnd) {
+    let i = 0;
+    let isFound = false;
+    let chars = 'abc';
+
+    while (!isFound || i < str.length - 2) {
+      if (str[i] != str[i + 1]) {
+        let char = chars.replace(str[i], '').replace(str[i + 1], '');
+        str = str.replace(str[i] + str[i + 1], char);
+        counter++;
+        isFound = true;
+        console.log(str + ' - ' + counter + ' reduction(s)');
+      } else {
+        i++;
+      }
+      if (i >= str.length - 1) {
+        isFound = true;
+      }
+    }
+
+    if (i >= str.length - 1) {
+      isEnd = true;
+    }
+  }
+
+  return tempStr + ' -> ' + counter + ' reduction(s) to -> ' + str;
+}
+
+
+/* ------------------------------- 16
+  Sorting algorithms:
+    Bubble Sort
+    Selection Sort
+    Merge Sort
+*/
+
+function bubbleSort(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < arr.length - i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        const temp = arr[j + 1];
+        arr[j + 1] = arr[j];
+        arr[j] = temp;
+      }
+    }
+  }
+  return arr;
+}
+
+function selectionSort(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    let indexOfMin = i;
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[j] < arr[indexOfMin]) {
+        indexOfMin = j;
+      }
+    }
+    if (indexOfMin !== i) {
+      let temp = arr[indexOfMin];
+      arr[indexOfMin] = arr[i];
+      arr[i] = temp;
+    }
+  }
+  return arr;
+}
+
+function mergeSort(arr) {
+  if (arr.length === 1) {
+    return arr;
+  }
+
+  const midIndex = Math.floor(arr.length / 2);
+  const left = arr.slice(0, midIndex);
+  const right = arr.slice(midIndex);
+
+  return merge(mergeSort(left), mergeSort(right));
+}
+
+function merge(left, right) {
+  const results = [];
+
+  while (left.length && right.length) {
+    if (left[0] < right[0]) {
+      results.push(left.shift());
+    } else {
+      results.push(right.shift())
+    }
+  }
+
+  return [...results, ...left, ...right];
 }
